@@ -93,15 +93,15 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
 
 def main():
     basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
-    # 1. Supprimer le contenu du dossier `public` s'il existe
-    if os.path.exists("public"):
-        shutil.rmtree("public")
-        print("✅ Deleted existing 'public' directory.")
+    # 1. Supprimer le contenu du dossier `docs` s'il existe
+    if os.path.exists("docs"):
+        shutil.rmtree("docs")
+        print("✅ Deleted existing 'docs' directory.")
 
     # 2. Copier tous les fichiers statiques dans `public`
-    copy_static("static", "public")
+    copy_static("static", "docs")
 
-    generate_pages_recursive("content", "template.html", "public", basepath)
+    generate_pages_recursive("content", "template.html", "docs", basepath)
 
 # Lancer la fonction si exécuté en script
 if __name__ == "__main__":
