@@ -23,7 +23,9 @@ L'outil principal est le logiciel de preuve formelle Isabelle/HOL
 ## Publications
 
 ### Polychronous RSS in a Process-algebraic Framework - A Case Study
+
 The ABZ 2025 conference case study focuses on developing a safety controller for autonomous highway driving. Within this context, we present a model of interacting agents that synchronize with a global state at specific points in time. These agents follow the differential equa- tions of standard kinematics, operating within a physical environment. They can make non-deterministic decisions regarding acceleration and follow strategies to avoid collisions. We instantiate our model according to the Responsibility-Sensitive Safety (RSS) setting. By defining agent properties such as extensions, cycle times, and acceleration limits, we concentrate on the single-lane model specified in the case study requirements document. We also consider a polychronous setting, i.e. we demonstrate that the safety invariants still hold if agents have mutually independent and un- known clocks. This enhances the model’s realism and makes it well-suited for refinement into implementations using synchronous languages.
+
 Lien : [article](https://hal.science/hal-05031158)
 
 
