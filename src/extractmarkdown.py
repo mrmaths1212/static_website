@@ -6,5 +6,5 @@ def extract_title(mardown):
     for line in lines:
         if line.startswith('# '):
             return line
-    raise Exception("No title found in the markdown file.")
+    return ""
 

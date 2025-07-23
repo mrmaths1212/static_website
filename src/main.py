@@ -4,8 +4,9 @@ from blocks_to_html import *
 
 import os
 import shutil
+import sys
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, base_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     # Lire le fichier markdown
@@ -30,6 +31,8 @@ def generate_page(from_path, template_path, dest_path):
         .replace("{{ Content }}", html_content)
     )
 
+    filled_template = filled_template.replace('href="/', f'href="{basepath}')
+    filled_template = filled_template.replace('src="/', f'src="{basepath}')
     # Créer le dossier de destination si nécessaire
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
@@ -65,23 +68,31 @@ def copy_static(source_dir, dest_dir):
     # Lancer la copie
     copy_recursive(source_dir, dest_dir)
 
-def generate_page_recursively(source_dir, template_path, dest_dir):
-    # Parcourir tous les fichiers dans le dossier source
-    for root, _, files in os.walk(source_dir):
-        for file in files:
-            if file.endswith(".md"):
-                # Construire les chemins complets
-                from_path = os.path.join(root, file)
-                relative_path = os.path.relpath(from_path, source_dir)
-                dest_path = os.path.join(dest_dir, relative_path.replace(".md", ".html"))
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, base_path):
+    for root, dirs, files in os.walk(dir_path_content):
+        for filename in files:
+            if filename.endswith(".md"):
+                # Chemin absolu vers le fichier .md
+                from_path = os.path.join(root, filename)
 
-                # Créer les dossiers nécessaires dans le dossier de destination
+                # Calcul du chemin relatif à dir_path_content
+                relative_path = os.path.relpath(from_path, dir_path_content)
+
+                # Destination : même structure dans dest_dir_path, avec .html à la place de .md
+                dest_path = os.path.join(
+                    dest_dir_path,
+                    os.path.splitext(relative_path)[0] + ".html"
+                )
+
+                # Créer les dossiers de destination si besoin
                 os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
                 # Générer la page
-                generate_page(from_path, template_path, dest_path)
+                print(f"📄 Generating page from {from_path} to {dest_path}")
+                generate_page(from_path, template_path, dest_path, base_path)
 
 def main():
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     # 1. Supprimer le contenu du dossier `public` s'il existe
     if os.path.exists("public"):
         shutil.rmtree("public")
@@ -90,7 +101,7 @@ def main():
     # 2. Copier tous les fichiers statiques dans `public`
     copy_static("static", "public")
 
-    generate_page_recursively("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html", "public", basepath)
 
 # Lancer la fonction si exécuté en script
 if __name__ == "__main__":
